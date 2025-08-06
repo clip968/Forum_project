@@ -1,0 +1,151 @@
+### API 테스트 요청
+### VS Code의 REST Client 확장을 사용하면 이 파일에서 직접 요청을 보낼 수 있습니다.
+
+@baseUrl = http://localhost:5000/api
+@token = 454df5a6sd4f654a
+
+### 서버 상태 확인
+GET http://localhost:5000
+
+### ==================== 인증 ====================
+
+### 회원가입
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "email": "test1@example.com",
+  "password": "Test123!"
+}
+
+### 로그인
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test1@example.com",
+  "password": "Test123!"
+}
+
+### 현재 사용자 정보
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### 비밀번호 변경
+POST {{baseUrl}}/auth/change-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Test123!",
+  "newPassword": "NewPass123!"
+}
+
+### 프로필 업데이트
+PUT {{baseUrl}}/auth/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "email": "updated@example.com"
+}
+
+### ==================== 게시글 ====================
+
+### 게시글 목록 조회
+GET {{baseUrl}}/posts?page=1&limit=10&category=tech
+
+### 게시글 작성
+POST {{baseUrl}}/posts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "첫 번째 게시글입니다",
+  "content": "안녕하세요! 이것은 테스트 게시글입니다. Node.js와 MongoDB를 사용하여 만든 포럼 API입니다.",
+  "category": "tech",
+  "tags": ["nodejs", "mongodb", "api"]
+}
+
+### 게시글 상세 조회
+GET {{baseUrl}}/posts/POST_ID_HERE
+
+### 게시글 수정
+PUT {{baseUrl}}/posts/POST_ID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "수정된 게시글 제목",
+  "content": "게시글 내용을 수정했습니다. 이제 더 나은 내용이 되었습니다.",
+  "category": "discussion"
+}
+
+### 게시글 삭제
+DELETE {{baseUrl}}/posts/POST_ID_HERE
+Authorization: Bearer {{token}}
+
+### 게시글 좋아요
+POST {{baseUrl}}/posts/POST_ID_HERE/like
+Authorization: Bearer {{token}}
+
+### 내 게시글 목록
+GET {{baseUrl}}/posts/my-posts
+Authorization: Bearer {{token}}
+
+### ==================== 댓글 ====================
+
+### 댓글 작성
+POST {{baseUrl}}/comments/post/POST_ID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "좋은 게시글이네요! 도움이 많이 되었습니다."
+}
+
+### 대댓글 작성
+POST {{baseUrl}}/comments/post/POST_ID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "저도 같은 생각입니다!",
+  "parentComment": "PARENT_COMMENT_ID_HERE"
+}
+
+### 댓글 목록 조회
+GET {{baseUrl}}/comments/post/POST_ID_HERE?page=1&limit=20
+
+### 댓글 수정
+PUT {{baseUrl}}/comments/COMMENT_ID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "댓글 내용을 수정했습니다."
+}
+
+### 댓글 삭제
+DELETE {{baseUrl}}/comments/COMMENT_ID_HERE
+Authorization: Bearer {{token}}
+
+### 댓글 좋아요
+POST {{baseUrl}}/comments/COMMENT_ID_HERE/like
+Authorization: Bearer {{token}}
+
+### 내 댓글 목록
+GET {{baseUrl}}/comments/my-comments
+Authorization: Bearer {{token}}
+
+### ==================== 관리자 기능 ====================
+
+### 게시글 고정 (관리자/모더레이터)
+POST {{baseUrl}}/posts/POST_ID_HERE/pin
+Authorization: Bearer {{token}}
+
+### 게시글 잠금 (관리자/모더레이터)
+POST {{baseUrl}}/posts/POST_ID_HERE/lock
+Authorization: Bearer {{token}}
