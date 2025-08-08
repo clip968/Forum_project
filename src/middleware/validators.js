@@ -4,8 +4,8 @@ const { body, param, query } = require('express-validator');
 exports.validateRegister = [
   body('username')
     .trim()
-    .isLength({ min: 3, max: 30 })
-    .withMessage('사용자명은 3-30자 사이여야 합니다.')
+    .isLength({ min: 2, max: 30 })
+    .withMessage('사용자명은 2-30자 사이여야 합니다.')
     .matches(/^[a-zA-Z0-9_]+$/)
     .withMessage('사용자명은 영문, 숫자, 언더스코어만 사용 가능합니다.'),
   body('email')
@@ -48,8 +48,8 @@ exports.validateUpdateProfile = [
   body('username')
     .optional()
     .trim()
-    .isLength({ min: 3, max: 30 })
-    .withMessage('사용자명은 3-30자 사이여야 합니다.')
+    .isLength({ min: 2, max: 30 })
+    .withMessage('사용자명은 2-30자 사이여야 합니다.')
     .matches(/^[a-zA-Z0-9_]+$/)
     .withMessage('사용자명은 영문, 숫자, 언더스코어만 사용 가능합니다.'),
   body('email')

@@ -7,10 +7,20 @@ dotenv.config();
 
 // Express 앱 생성
 const app = express();
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://kookmin-10-s3.s3-website-us-east-1.amazonaws.com'
+];
 
 // 미들웨어 설정
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
