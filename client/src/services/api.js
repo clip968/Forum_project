@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // HTTPS로 변경
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://43.201.46.175:5000/api';
 
 console.log('Current API_BASE_URL:', API_BASE_URL); // 디버깅용
 

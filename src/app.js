@@ -1,28 +1,51 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 // 환경 변수 설정
 dotenv.config();
 
 // Express 앱 생성
 const app = express();
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://forum-web.s3-website.ap-northeast-2.amazonaws.com'
-];
 
-// 미들웨어 설정
+// 디버깅: 들어오는 Origin 로깅
+app.use((req, res, next) => {
+  if (req.headers.origin) {
+    console.log('[REQ ORIGIN]', req.headers.origin, req.method, req.path);
+  }
+  next();
+});
+
+// 허용할 Origin 목록
+const allowedOrigins = new Set([
+  'http://localhost:3000',
+  'http://forum-web.s3-website.ap-northeast-2.amazonaws.com',
+  'https://dXXXXXXXX.cloudfront.net', // CloudFront 배포 도메인 생기면 교체
+  'https://your-custom-domain.com'    // 커스텀 도메인 쓰면 추가
+]);
+
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);       // 모바일/서버 간 호출 등
+    if (allowedOrigins.has(origin)) return callback(null, true);
+    console.warn('[CORS BLOCK]', origin);
+    return callback(new Error('CORS_NOT_ALLOWED'));
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
 }));
+
+// Preflight 명시 처리 (일부 프록시 환경에서 유용)
+app.options('*', cors());
+
+// CORS 전용 에러 핸들러 (500 대신 403)
+app.use((err, req, res, next) => {
+  if (err && err.message === 'CORS_NOT_ALLOWED') {
+    return res.status(403).json({ error: 'CORS: Origin not allowed', origin: req.headers.origin });
+  }
+  next(err);
+});
 
 // Raw 요청 로깅 (JSON 파싱 전)
 app.use((req, res, next) => {
@@ -125,4 +148,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;
