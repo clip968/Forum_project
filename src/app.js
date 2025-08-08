@@ -34,7 +34,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type','Authorization']
 }));
 
-app.options('*', cors());
+// In Express with path-to-regexp v6, '*' is not a valid route pattern.
+// Use '(.*)' to match any path for preflight requests.
+app.options('(.*)', cors());
 
 app.use((err, req, res, next) => {
   if (err && err.message === 'CORS_NOT_ALLOWED') {
