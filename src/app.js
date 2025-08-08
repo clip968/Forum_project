@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
-  'http://kookmin-10-s3.s3-website-us-east-1.amazonaws.com'
+  'http://forum-web.s3-website.ap-northeast-2.amazonaws.com'
 ];
 
 // 미들웨어 설정
