@@ -31,12 +31,13 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization']
+  allowedHeaders: ['Content-Type','Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 
-// In Express with path-to-regexp v6, '*' is not a valid route pattern.
-// Use '(.*)' to match any path for preflight requests.
-app.options('(.*)', cors());
+// Note: The cors() middleware above already handles OPTIONS preflight requests
+// No need for a separate app.options() handler
 
 app.use((err, req, res, next) => {
   if (err && err.message === 'CORS_NOT_ALLOWED') {
