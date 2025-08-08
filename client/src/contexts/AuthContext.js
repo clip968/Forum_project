@@ -38,8 +38,16 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
-      setError(error.response?.data?.error || '로그인에 실패했습니다.');
-      return { success: false, error: error.response?.data?.error };
+      // 서버 검증 에러 처리 (express-validator 형식)
+      const data = error.response?.data;
+      let message = '로그인에 실패했습니다.';
+      if (data?.errors?.length) {
+        message = data.errors.map(e => e.msg).join('\n');
+      } else if (data?.error) {
+        message = data.error;
+      }
+      setError(message);
+      return { success: false, error: message };
     }
   };
 
@@ -55,8 +63,15 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
-      setError(error.response?.data?.error || '회원가입에 실패했습니다.');
-      return { success: false, error: error.response?.data?.error };
+      const data = error.response?.data;
+      let message = '회원가입에 실패했습니다.';
+      if (data?.errors?.length) {
+        message = data.errors.map(e => e.msg).join('\n');
+      } else if (data?.error) {
+        message = data.error;
+      }
+      setError(message);
+      return { success: false, error: message };
     }
   };
 

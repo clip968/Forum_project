@@ -5,26 +5,38 @@ import { useAuth } from '../contexts/AuthContext';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState([]);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+  setErrors([]);
     
     const result = await login(email, password);
     if (result.success) {
       navigate('/posts');
     } else {
-      setError(result.error || '로그인에 실패했습니다.');
+      if (result.error) {
+        setErrors(result.error.split('\n'));
+      } else {
+        setErrors(['로그인에 실패했습니다.']);
+      }
     }
   };
 
   return (
     <div className="form-container">
       <h2>로그인</h2>
-      {error && <div className="error">{error}</div>}
+      {errors.length > 0 && (
+        <div className="error" style={{ whiteSpace: 'pre-line' }}>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+            {errors.map((e, i) => (
+              <li key={i}>{e}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>이메일</label>
