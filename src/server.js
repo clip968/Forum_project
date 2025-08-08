@@ -16,8 +16,9 @@ const startServer = async () => {
     }
 
     // 서버 시작
-    app.listen(PORT, '127.0.0.1', () => {
-      console.log(`API server running on http://127.0.0.1:${PORT}`);
+    // 0.0.0.0으로 바인딩하여 외부에서도 접속 가능하도록 설정
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`API server running on http://0.0.0.0:${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV}`);
     });
   } catch (error) {
