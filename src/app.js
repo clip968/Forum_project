@@ -20,8 +20,6 @@ app.use((req, res, next) => {
 const allowedOrigins = new Set([
   'http://localhost:3000',
   'http://forum-web.s3-website.ap-northeast-2.amazonaws.com',
-  'https://dXXXXXXXX.cloudfront.net', // CloudFront 배포 도메인 생기면 교체
-  'https://your-custom-domain.com'    // 커스텀 도메인 쓰면 추가
 ]);
 
 app.use(cors({
